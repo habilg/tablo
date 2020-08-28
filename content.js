@@ -1,7 +1,3 @@
-document.querySelector('th[data-eng="17"]').textContent = "صف فروشنذگان"
-document.querySelector('th[data-eng="15"]').textContent = "صف خریداران"
-var chekValue = '18626347ce169fc4087ac7747df1fbd6';
-
 var tblHtml = `
    <style>
         .sort_header_habil{
@@ -45,16 +41,18 @@ var tblHtml = `
                                 </div>
                             </div>
                         `
-document.querySelector("body > main > div > div > div.row > div:nth-child(1)").insertAdjacentHTML("afterend", tblHtml);
+
+const summerizer = (checkValue) => {
 
 
-var s = document.createElement("script");
-s.textContent = `
+
+    var s = document.createElement("script");
+    s.textContent = `
 var actorLength = 0;
 mw.sortIndex = 1;
 
 
-var socketActor = io('http://api.tablokhani.com/actorlist?check=${chekValue}');
+var socketActor = io('http://api.tablokhani.com/actorlist?check=${checkValue}');
 socketActor.on('actorList', function (actorList) {
     if (actorList.length == actorLength) {
         console.log("No update");
@@ -214,8 +212,15 @@ $(document).on('click', '#search_all', function () {
 });
 
 `
+    document.body.appendChild(s)
+}
 
-
-
-
-document.body.appendChild(s)
+$(document).ready(function () {
+    $('th[data-eng="17"]').text("صف فروشندگان");
+    $('th[data-eng="15"]').text("صف خریداران");
+    var _text = document.querySelectorAll('script')[13].text
+    var chekValue = _text.substr(_text.search(/check=/) + 6, 32);
+    console.log(chekValue);
+    document.querySelector("body > main > div > div > div.row > div:nth-child(1)").insertAdjacentHTML("afterend", tblHtml);
+    summerizer(chekValue)
+});
